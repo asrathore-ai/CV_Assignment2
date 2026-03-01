@@ -46,13 +46,15 @@ def get_datasets(device, resize=None, dtype=torch.float32):
         assert len(resize) == 2, f"Expected resize shapes to be 2D, got {len(resize)}"      
         transforms.append(v2.Resize(size=resize))
 
+    transforms.append(v2.ToDtype(dtype, scale=True))
+    
     MEAN = torch.tensor([0.485 , 0.456 , 0.406]).to(dtype).to(device)
     STD = torch.tensor([0.229 , 0.224 , 0.225]).to(dtype).to(device)
     transforms.append(v2.Normalize(mean=MEAN, std=STD))
     final_tform = v2.Compose(transforms)
 
     # Train dataset
-    imgs = data["train"]["x"].to(dtype).to(device)
+    imgs = data["train"]["x"].to(device)
     imgs = final_tform(imgs)
 
     labels = data["train"]["y"].to(device).long()
@@ -64,7 +66,7 @@ def get_datasets(device, resize=None, dtype=torch.float32):
     val_dataset = splits[1]
 
     # Test dataset 
-    imgs = data["test"]["x"].to(dtype).to(device)
+    imgs = data["test"]["x"].to(device)
     imgs = final_tform(imgs)
     
     labels = data["test"]["y"].to(device).long()
