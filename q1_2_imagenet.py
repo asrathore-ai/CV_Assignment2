@@ -44,7 +44,7 @@ print_model_details(console, batch_size, device, model, model_weights, criterion
 import wandb 
 wandb.init(
     project="CV_Assignment_2",
-    name="resnet18_baseline_imgsize_224",
+    name="resnet18_imagenet_imgsize_224",
     config={
         "learning_rate": lr,
         "epochs": epochs,
