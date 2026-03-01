@@ -47,7 +47,7 @@ def get_datasets(device, resize=None, dtype=torch.float32):
         transforms.append(v2.Resize(size=resize))
 
     transforms.append(v2.ToDtype(dtype, scale=True))
-    
+
     MEAN = torch.tensor([0.485 , 0.456 , 0.406]).to(dtype).to(device)
     STD = torch.tensor([0.229 , 0.224 , 0.225]).to(dtype).to(device)
     transforms.append(v2.Normalize(mean=MEAN, std=STD))
@@ -97,7 +97,7 @@ class Metrics:
 
     def get_values(self):
         accuracy = (self.correct_count / self.total_count)*100
-        loss = self.total_loss  / self.batch_count
+        loss = self.total_loss  / self.total_count
         return accuracy, loss 
 
 def print_dataset_details(console, train, val, test, num_classes, batch_img):

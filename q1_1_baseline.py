@@ -32,7 +32,7 @@ model_weights=None
 model = resnet18(weights=model_weights)
 model.fc=nn.Linear(model.fc.in_features, num_classes)
 model = model.to(device)
-criterion=nn.CrossEntropyLoss()
+criterion=nn.CrossEntropyLoss(reduction="sum")
 
 epochs=100
 lr = 5e-4
@@ -54,7 +54,6 @@ wandb.init(
         "scheduler": "MultiStepLR"
     }
 )
-wandb.watch(model, log_freq=10)
     
 def step(x, y, model, loss_fn, metrics):
     # Data is already on cuda
