@@ -16,7 +16,7 @@ console = Console()
 
 device=torch.device("cuda") if torch.cuda.is_available() else "cpu"
 batch_size=128
-train, val, test, num_classes = get_datasets(device, resize=(224, 224))
+train, val, test, num_classes = get_datasets(device=torch.device("cpu"), resize=(224, 224))
 
 
 train_loader = DataLoader(train, batch_size=batch_size, shuffle=True)
@@ -71,6 +71,8 @@ for e in range(epochs):
     train_metrics=Metrics("Train")
     model.train()
     for x,y in tqdm(train_loader, desc=f"Training Loop : {e}"):
+        x = x.to(device)
+        y = y.to(device)
         loss = step(x,y,model,criterion,train_metrics)
         optimizer.zero_grad()
         loss.backward()
@@ -82,6 +84,8 @@ for e in range(epochs):
     model.eval()
     with torch.no_grad():
         for x,y in tqdm(val_loader, desc=f"Validation Loop : {e}"):
+            x = x.to(device)
+            y = y.to(device)
             loss = step(x,y,model,criterion,val_metrics)
 
     train_accuracy, train_loss = train_metrics.get_values()
@@ -105,6 +109,8 @@ model.eval()
 test_metrics=Metrics("Test")
 with torch.no_grad():
     for x,y in tqdm(test_loader):
+        x = x.to(device)
+        y = y.to(device)
         loss = step(x,y,model,criterion,test_metrics)
 test_accuracy, test_loss = test_metrics.get_values()
 
