@@ -13,6 +13,8 @@ from rich.panel import Panel
 from rich.text import Text
 
 load_dotenv()
+seed = 42
+GENERATOR = torch.Generator().manual_seed(seed)
 
 def get_q1_data():
     data_root= Path(os.getenv("DATA_ROOT"))
@@ -60,7 +62,7 @@ def get_datasets(device, resize=None, dtype=torch.float32):
     labels = data["train"]["y"].to(device).long()
     
     full_dataset = TensorDataset(imgs, labels)
-    splits = random_split(full_dataset, [0.8, 0.2])
+    splits = random_split(full_dataset, [0.8, 0.2], generator=GENERATOR)
     
     train_dataset = splits[0]
     val_dataset = splits[1]
